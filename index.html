@@ -43,7 +43,7 @@
 </head>
 <body class="bg-slate-900 text-white select-none" id="main-body">
 
-    <!-- AUDIO TAGS (Hidden) -->
+    <!-- AUDIO TAGS -->
     <audio id="bg-music" loop>
         <source src="forYou.mp3" type="audio/mp3">
     </audio>
@@ -61,7 +61,7 @@
         </div>
     </div>
 
-    <!-- Scene 0: COUNTDOWN SCENE (Now Active) -->
+    <!-- Scene 0: COUNTDOWN SCENE -->
     <div id="scene0" class="active-scene scene bg-gradient-to-br from-slate-900 via-rose-900 to-slate-900 px-6 text-center">
         <div class="glass-premium p-8 rounded-3xl w-full max-w-sm border border-rose-300/30">
             <div class="text-5xl mb-6 float">🔒</div>
@@ -199,20 +199,22 @@
         document.addEventListener('dblclick', function(event) { event.preventDefault(); }, { passive: false });
 
         // ==========================================
-        // 1. DATE LOCK / COUNTDOWN LOGIC (NOW ACTIVE)
+        // 1. DATE LOCK / COUNTDOWN LOGIC (ON AND WORKING)
         // ==========================================
-        const targetDate = new Date("October 11, 2026 00:00:00").getTime();
+        
+        // TEST KARNE KE LIYE IS DATE KO 'October 8, 2026' KAR DO. GF KO BHEJNE SE PEHLE WAPAS 'October 11' KAR DENA.
+        const targetDate = new Date("October 8, 2026 00:00:00").getTime();
         
         function checkDate() {
             const now = new Date().getTime();
             const distance = targetDate - now;
 
             if (distance <= 0) {
-                // If date has passed or it's 11 Oct, unlock the app
+                // Time up! App Khul Jayegi
                 document.getElementById('scene0').classList.remove('active-scene');
                 document.getElementById('scene1').classList.add('active-scene');
             } else {
-                // Keep showing countdown lock
+                // Time bacha hai, Countdown chalega
                 document.getElementById('scene1').classList.remove('active-scene');
                 document.getElementById('scene0').classList.add('active-scene');
                 
@@ -223,7 +225,10 @@
                 setTimeout(checkDate, 1000);
             }
         }
-        checkDate(); // Run immediately
+        
+        // Ye line function ko chalu rakhti hai taaki timer 0 na dikhe aur seconds ghire. 
+        checkDate();
+
 
         // ==========================================
         // 2. 11 REASONS GENERATOR LOGIC
@@ -254,7 +259,7 @@
         }
 
         // ==========================================
-        // 3. VOICE NOTE & BACKGROUND MUSIC LOGIC (BUG FIXED)
+        // 3. VOICE NOTE & BACKGROUND MUSIC LOGIC (PERFECTLY FIXED)
         // ==========================================
         const voiceAudio = document.getElementById('voice-note');
         const bgMusic = document.getElementById('bg-music');
@@ -264,19 +269,19 @@
             if(isPlaying) {
                 voiceAudio.pause(); 
                 voiceAudio.currentTime = 0; 
-                bgMusic.play(); // Background music resume hoga agar voice note band kiya toh
+                bgMusic.play(); // Background music wapas chalega agar bich me band kiya
                 document.getElementById('voice-icon').innerText = '🎤';
                 document.getElementById('voice-wave').style.width = '0%';
                 isPlaying = false;
             } else {
-                bgMusic.pause(); // YAHAN FIX KIYA HAI: Ab gaana poora PAUSE ho jayega
+                bgMusic.pause(); // GAANA POORA PAUSE HO JAYEGA
                 voiceAudio.play();
                 document.getElementById('voice-icon').innerText = '⏸️';
                 document.getElementById('voice-wave').style.width = '100%';
                 isPlaying = true;
                 
                 voiceAudio.onended = function() {
-                    bgMusic.play(); // Jaise hi Voice khatam hoga, gaana wapas chal jayega
+                    bgMusic.play(); // Voice Note pura hone ke baad gaana wapas chal jayega
                     document.getElementById('voice-icon').innerText = '🎤';
                     document.getElementById('voice-wave').style.width = '0%'; 
                     isPlaying = false;
@@ -417,4 +422,16 @@
         }
         function flipCard(card) {
             if (lockBoard || card === firstCard) return; card.classList.add('flip');
-            if (!hasF
+            if (!hasFlippedCard) { hasFlippedCard = true; firstCard = card; return; }
+            secondCard = card; moves++; document.getElementById('moves-count').innerText = moves; checkForMatch();
+        }
+        function checkForMatch() { firstCard.dataset.icon === secondCard.dataset.icon ? disableCards() : unflipCards(); }
+        function disableCards() {
+            firstCard.onclick = null; secondCard.onclick = null; matchesFound += 2; resetBoard();
+            if (matchesFound === cardsArray.length) { setTimeout(() => { showModal("You Won! 🎉", `Awesome! You matched all cards in ${moves} moves. Just like we match perfectly together! 🥰`, "💖"); confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, zIndex: 100 }); document.getElementById('play-again-btn').classList.remove('hidden'); }, 500); }
+        }
+        function unflipCards() { lockBoard = true; setTimeout(() => { firstCard.classList.remove('flip'); secondCard.classList.remove('flip'); resetBoard(); }, 700); }
+        function resetBoard() { [hasFlippedCard, lockBoard, firstCard, secondCard] = [false, false, null, null]; }
+    </script>
+</body>
+</html>
