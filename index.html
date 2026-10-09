@@ -48,7 +48,8 @@
         <source src="forYou.mp3" type="audio/mp3">
     </audio>
     <audio id="voice-note">
-        <source src="Birthday Spacial.m4a" type="audio/m4a">
+        <!-- Space URL encoding fixed -->
+        <source src="Birthday%20Spacial.m4a" type="audio/m4a">
     </audio>
 
     <!-- Custom Modal for Alerts -->
@@ -126,7 +127,8 @@
         <div class="glass-premium rounded-[2rem] p-6 w-full max-w-sm text-center shadow-2xl transform scale-95 opacity-0 transition-all duration-1000 z-10 border-t-2 border-l-2 border-white/50" id="final-card">
             <div class="relative w-28 h-28 mx-auto mb-4">
                 <div class="absolute inset-0 bg-gradient-to-tr from-pink-500 to-rose-400 rounded-full animate-pulse blur-md opacity-50"></div>
-                <img src="https://raw.githubusercontent.com/itzaaaru1-a11y/Birthday/refs/heads/main/4aebd464-11c0-4e77-8a3f-c436bd5e819d.jpg" alt="My Love" id="main-photo" class="relative w-full h-full rounded-full border-[3px] border-white shadow-xl object-cover">
+                <!-- Fixed link to direct file -->
+                <img src="4aebd464-11c0-4e77-8a3f-c436bd5e819d.jpg" alt="My Love" id="main-photo" class="relative w-full h-full rounded-full border-[3px] border-white shadow-xl object-cover">
             </div>
             <h1 class="romantic-font text-3xl font-bold mb-1 text-white drop-shadow-md">Happy Birthday</h1>
             <h2 class="romantic-font text-2xl italic text-rose-300 mb-4 drop-shadow-md">Meri Jaan ❤️</h2>
@@ -225,7 +227,6 @@
         }
         checkDate();
         */
-
 
         // ==========================================
         // 2. 11 REASONS GENERATOR LOGIC
@@ -381,13 +382,13 @@
         }
 
         // ==========================================
-        // 5. GALLERY LOGIC
+        // 5. GALLERY LOGIC (Fixed links to direct filenames)
         // ==========================================
         const myPhotos = [
-            { src: 'https://raw.githubusercontent.com/itzaaaru1-a11y/Birthday/refs/heads/main/3e156459-6896-4d0e-b6a7-fd1e66ebafab.jpg', caption: 'Our imagination 🌹' },
-            { src: 'https://raw.githubusercontent.com/itzaaaru1-a11y/Birthday/refs/heads/main/b87cf9cc-ac7d-4d45-9edb-d2930c0c2001.jpg', caption: 'Your Cute Smile 😍' },
-            { src: 'https://raw.githubusercontent.com/itzaaaru1-a11y/Birthday/refs/heads/main/bd5b224e-b1b5-4480-9484-2364a0fddecb.jpg', caption: 'Nakhre wali ladki 🙄' },
-            { src: 'https://raw.githubusercontent.com/itzaaaru1-a11y/Birthday/refs/heads/main/4aebd464-11c0-4e77-8a3f-c436bd5e819d.jpg', caption: 'Happy 11th Oct! 🎉' }
+            { src: '3e156459-6896-4d0e-b6a7-fd1e66ebafab.jpg', caption: 'Our imagination 🌹' },
+            { src: 'b87cf9cc-ac7d-4d45-9edb-d2930c0c2001.jpg', caption: 'Your Cute Smile 😍' },
+            { src: 'bd5b224e-b1b5-4480-9484-2364a0fddecb.jpg', caption: 'Nakhre wali ladki 🙄' },
+            { src: '4aebd464-11c0-4e77-8a3f-c436bd5e819d.jpg', caption: 'Happy 11th Oct! 🎉' }
         ];
 
         function buildGallery() {
