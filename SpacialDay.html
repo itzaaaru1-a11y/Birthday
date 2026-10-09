@@ -5,138 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Surprise for You ❤️</title>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    
-    <!-- Premium Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Space+Mono&display=swap" rel="stylesheet">
     
     <style>
-        body { 
-            font-family: 'Outfit', sans-serif; 
-            overflow: hidden; 
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
+        body { font-family: 'Outfit', sans-serif; overflow: hidden; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
         .romantic-font { font-family: 'Playfair Display', serif; }
         .hacker-font { font-family: 'Space Mono', monospace; }
         
-        .scene { 
-            display: none; flex-direction: column; align-items: center; justify-content: center; 
-            height: 100dvh; width: 100vw; transition: opacity 0.8s ease-in-out; opacity: 0;
-        }
+        .scene { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100dvh; width: 100vw; transition: opacity 0.8s ease-in-out; opacity: 0; }
         .active-scene { display: flex; opacity: 1; }
         
-        .glass-premium {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .glass-dark {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
+        .glass-premium { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); }
+        .glass-dark { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        
         .heartbeat { animation: pulse 1.2s infinite; }
-        @keyframes pulse {
-            0% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,0,50,0.5)); }
-            50% { transform: scale(1.15); filter: drop-shadow(0 0 25px rgba(255,0,50,0.8)); }
-            100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,0,50,0.5)); }
-        }
-
+        @keyframes pulse { 0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(255,0,50,0.5)); } 50% { transform: scale(1.15); filter: drop-shadow(0 0 25px rgba(255,0,50,0.8)); } }
         .float { animation: floating 3s ease-in-out infinite; }
-        @keyframes floating {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .typing-cursor::after {
-            content: '|';
-            animation: blink 1s step-end infinite;
-            color: #ff477e;
-        }
+        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .typing-cursor::after { content: '|'; animation: blink 1s step-end infinite; color: #ff477e; }
         @keyframes blink { 50% { opacity: 0; } }
-
-        #progress-ring {
-            transition: stroke-dashoffset 0.1s linear;
-            transform: rotate(-90deg);
-            transform-origin: 50% 50%;
-        }
-
-        /* Polaroid Gallery Styles */
-        .polaroid {
-            background: #fff; padding: 10px 10px 20px 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transform: rotate(-2deg); transition: transform 0.3s;
-        }
+        
+        #progress-ring { transition: stroke-dashoffset 0.1s linear; transform: rotate(-90deg); transform-origin: 50% 50%; }
+        
+        /* Gallery & Game Styles */
+        .polaroid { background: #fff; padding: 10px 10px 20px 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transform: rotate(-2deg); transition: transform 0.3s; }
         .polaroid:nth-child(even) { transform: rotate(3deg); }
-        .polaroid:hover { transform: scale(1.05) rotate(0deg); z-index: 10; }
-
-        /* Memory Game Styles */
-        .memory-game {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
-            perspective: 1000px; width: 100%;
-        }
-        .memory-card {
-            width: 100%; aspect-ratio: 3/4; /* Makes cards responsive on mobile */
-            position: relative; transform-style: preserve-3d;
-            transition: transform 0.5s; cursor: pointer;
-        }
+        
+        .memory-game { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; perspective: 1000px; width: 100%; }
+        .memory-card { width: 100%; aspect-ratio: 3/4; position: relative; transform-style: preserve-3d; transition: transform 0.5s; cursor: pointer; }
         .memory-card.flip { transform: rotateY(180deg); }
-        .front-face, .back-face {
-            width: 100%; height: 100%; position: absolute;
-            border-radius: 8px; backface-visibility: hidden;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 28px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
+        .front-face, .back-face { width: 100%; height: 100%; position: absolute; border-radius: 8px; backface-visibility: hidden; display: flex; justify-content: center; align-items: center; font-size: 28px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
         .front-face { background: #fff; transform: rotateY(180deg); }
         .back-face { background: linear-gradient(135deg, #ff477e, #ff85a1); color: white; }
     </style>
 </head>
 <body class="bg-slate-900 text-white select-none" id="main-body">
 
-    <!-- Custom Modal -->
-    <div id="custom-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center transition-opacity duration-300 px-4">
+    <!-- AUDIO TAGS (Hidden) -->
+    <audio id="bg-music" loop>
+        <source src="forYou.mp3" type="audio/mp3">
+    </audio>
+    <audio id="voice-note">
+        <source src="Birthday Spacial.m4a" type="audio/m4a">
+    </audio>
+
+    <!-- Custom Modal for Alerts -->
+    <div id="custom-modal" class="fixed inset-0 bg-black bg-opacity-70 z-[100] hidden items-center justify-center transition-opacity duration-300 px-4">
         <div class="glass-premium bg-white bg-opacity-20 p-8 rounded-3xl w-full max-w-sm text-center transform transition-transform scale-95 border border-white/40 shadow-2xl" id="modal-box">
             <div class="text-5xl mb-4 float" id="modal-icon">🤨</div>
             <h3 class="romantic-font text-2xl font-bold text-white mb-2 tracking-wide" id="modal-title">Wait!</h3>
             <p class="text-md text-gray-200 mb-8 font-light" id="modal-message">Message here</p>
-            <button onclick="closeModal()" class="w-full py-3 bg-gradient-to-r from-rose-400 to-pink-500 text-white font-semibold rounded-full shadow-lg active:scale-95 transition-all">
-                Theek Hai 😒
-            </button>
+            <button onclick="closeModal()" class="w-full py-3 bg-gradient-to-r from-rose-400 to-pink-500 text-white font-semibold rounded-full shadow-lg active:scale-95 transition-all">Theek Hai 😒</button>
         </div>
     </div>
 
-    <!-- Lightbox for Gallery -->
-    <div id="lightbox" class="fixed inset-0 bg-black bg-opacity-90 z-[60] hidden flex-col items-center justify-center transition-opacity duration-300">
-        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white text-3xl font-bold p-2 active:scale-90">&times;</button>
-        <img id="lightbox-img" src="" class="max-w-[90%] max-h-[70vh] rounded-lg border-2 border-white/50 shadow-2xl object-cover mb-4">
-        <p id="lightbox-cap" class="romantic-font text-2xl text-rose-300 italic"></p>
+    <!-- COUNTDOWN SCENE (COMMENTED OUT FOR TESTING) 
+    <div id="scene0" class="scene bg-gradient-to-br from-slate-900 via-rose-900 to-slate-900 px-6 text-center">
+        <div class="glass-premium p-8 rounded-3xl w-full max-w-sm border border-rose-300/30">
+            <div class="text-5xl mb-6 float">🔒</div>
+            <h1 class="romantic-font text-3xl font-bold text-rose-300 mb-4">Too Early!</h1>
+            <p class="text-gray-300 font-light mb-8">Curiosity is good, but you have to wait until your special day (11 October) to unlock this surprise!</p>
+            <div class="flex justify-center gap-4 text-center font-mono text-xl text-white">
+                <div><span id="c-days" class="block text-3xl font-bold text-rose-400">00</span><span class="text-xs text-gray-400">DAYS</span></div> :
+                <div><span id="c-hours" class="block text-3xl font-bold text-rose-400">00</span><span class="text-xs text-gray-400">HRS</span></div> :
+                <div><span id="c-mins" class="block text-3xl font-bold text-rose-400">00</span><span class="text-xs text-gray-400">MIN</span></div> :
+                <div><span id="c-secs" class="block text-3xl font-bold text-rose-400">00</span><span class="text-xs text-gray-400">SEC</span></div>
+            </div>
+            <p class="text-xs text-gray-400 mt-8 italic">Come back when the timer hits zero ✨</p>
+        </div>
     </div>
+    -->
 
-    <!-- Scene 1: The Date Check -->
+    <!-- Scene 1: The Date Check (Made Active by Default for now) -->
     <div id="scene1" class="active-scene scene bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 px-6 text-center">
         <div class="glass-premium p-8 rounded-3xl w-full max-w-sm">
             <h1 class="romantic-font text-4xl font-bold text-rose-300 mb-2 italic">Wait...</h1>
             <h2 class="text-xl font-light text-gray-200 mb-10">Is it October 11 already?</h2>
-            
             <div class="flex flex-col gap-4">
-                <button onclick="nextScene(2)" class="w-full py-4 bg-gradient-to-r from-rose-500 to-pink-600 text-white text-lg font-semibold rounded-2xl shadow-[0_0_15px_rgba(225,29,72,0.4)] active:scale-95 transition-all">
-                    Yes, it's my day! ✨
-                </button>
-                <button onclick="showModal('Nautanki!', 'Jhooth mat bolo, I know whose birthday is coming! Chup chap YES pe click karo. 😂', '🤨')" class="w-full py-4 bg-white bg-opacity-10 text-white border border-white/20 text-lg font-medium rounded-2xl active:scale-95 transition-all">
-                    No, just browsing
-                </button>
+                <button onclick="nextScene(2)" class="w-full py-4 bg-gradient-to-r from-rose-500 to-pink-600 text-white text-lg font-semibold rounded-2xl shadow-[0_0_15px_rgba(225,29,72,0.4)] active:scale-95 transition-all">Yes, it's my day! ✨</button>
+                <button onclick="showModal('Nautanki!', 'Jhooth mat bolo, I know whose birthday is coming! Chup chap YES pe click karo. 😂', '🤨')" class="w-full py-4 bg-white bg-opacity-10 text-white border border-white/20 text-lg font-medium rounded-2xl active:scale-95 transition-all">No, just browsing</button>
             </div>
         </div>
     </div>
@@ -147,7 +96,6 @@
             <div class="text-4xl mb-4">🔐</div>
             <h2 class="romantic-font text-2xl font-bold mb-4 text-blue-200">Security Check</h2>
             <p class="text-md mb-10 text-gray-300 font-light leading-relaxed">Before you unlock your surprise, answer honestly:<br><br><span class="font-semibold text-white">Will you give a grand treat to your boyfriend?</span></p>
-            
             <div class="relative w-full h-32 flex justify-center items-center">
                 <button onclick="nextScene(3)" class="absolute left-0 px-6 py-3 bg-gradient-to-r from-green-400 to-emerald-500 text-white font-semibold rounded-full shadow-lg z-10 active:scale-95">YES, OBVIOUSLY!</button>
                 <button id="btn-no" class="absolute right-0 px-6 py-3 bg-red-500/80 backdrop-blur text-white font-semibold rounded-full z-20 transition-all duration-200">NO WAY!</button>
@@ -176,21 +124,15 @@
     <!-- Scene 5: Grand Finale Letter -->
     <div id="scene5" class="scene bg-cover bg-center bg-no-repeat px-4 relative before:content-[''] before:absolute before:inset-0 before:bg-slate-900/60" style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80');">
         <div class="glass-premium rounded-[2rem] p-6 w-full max-w-sm text-center shadow-2xl transform scale-95 opacity-0 transition-all duration-1000 z-10 border-t-2 border-l-2 border-white/50" id="final-card">
-            
             <div class="relative w-28 h-28 mx-auto mb-4">
                 <div class="absolute inset-0 bg-gradient-to-tr from-pink-500 to-rose-400 rounded-full animate-pulse blur-md opacity-50"></div>
-                <!-- PROFILE PHOTO -->
-                <img src="https://via.placeholder.com/150" alt="My Love" class="relative w-full h-full rounded-full border-[3px] border-white shadow-xl object-cover">
+                <img src="https://raw.githubusercontent.com/itzaaaru1-a11y/Birthday/refs/heads/main/4aebd464-11c0-4e77-8a3f-c436bd5e819d.jpg" alt="My Love" id="main-photo" class="relative w-full h-full rounded-full border-[3px] border-white shadow-xl object-cover">
             </div>
-            
             <h1 class="romantic-font text-3xl font-bold mb-1 text-white drop-shadow-md">Happy Birthday</h1>
             <h2 class="romantic-font text-2xl italic text-rose-300 mb-4 drop-shadow-md">Meri Jaan ❤️</h2>
-            
             <div class="text-left glass-dark p-4 rounded-2xl shadow-inner text-gray-100 font-light text-[14px] leading-relaxed h-[30vh] overflow-y-auto mb-4" id="letter-container">
                 <p id="love-letter" class="typing-cursor"></p>
             </div>
-
-            <!-- Hidden button that shows after typing finishes -->
             <button id="gift-hub-btn" onclick="nextScene(6)" class="hidden w-full py-3 bg-gradient-to-r from-rose-500 to-pink-600 text-white font-semibold rounded-full shadow-lg active:scale-95 transition-all animate-bounce">
                 Explore Your Gifts 🎁
             </button>
@@ -199,38 +141,41 @@
 
     <!-- Scene 6: The Hub (Menu) -->
     <div id="scene6" class="scene bg-gradient-to-b from-slate-900 via-rose-900 to-slate-900 px-6 text-center">
-        <h2 class="romantic-font text-4xl font-bold text-white mb-2">Your Surprises</h2>
-        <p class="text-rose-300 font-light mb-10">Choose what you want to do next...</p>
+        <h2 class="romantic-font text-4xl font-bold text-white mb-2 mt-4">Your Surprises</h2>
+        <p class="text-rose-300 font-light mb-8">Choose what you want to explore...</p>
 
-        <div class="flex flex-col gap-6 w-full max-w-sm">
-            <button onclick="nextScene(7)" class="glass-premium p-6 rounded-2xl flex items-center justify-between active:scale-95 transition-transform">
-                <div class="text-left">
-                    <h3 class="text-xl font-bold text-white">Memory Lane</h3>
-                    <p class="text-sm text-gray-300">Our beautiful moments 📸</p>
-                </div>
-                <div class="text-3xl">✨</div>
+        <div class="grid grid-cols-2 gap-4 w-full max-w-sm mx-auto h-[60vh] overflow-y-auto pb-4">
+            <button onclick="nextScene(7)" class="glass-premium p-4 rounded-2xl flex flex-col items-center justify-center active:scale-95 transition-transform">
+                <div class="text-4xl mb-2">📸</div>
+                <h3 class="text-lg font-bold text-white">Memories</h3>
+                <p class="text-xs text-gray-300 text-center mt-1">Our moments</p>
             </button>
-
-            <button onclick="startMemoryGame()" class="glass-premium p-6 rounded-2xl flex items-center justify-between active:scale-95 transition-transform">
-                <div class="text-left">
-                    <h3 class="text-xl font-bold text-white">Play with Me</h3>
-                    <p class="text-sm text-gray-300">Match the love cards 🎮</p>
-                </div>
-                <div class="text-3xl">💖</div>
+            <button onclick="startMemoryGame()" class="glass-premium p-4 rounded-2xl flex flex-col items-center justify-center active:scale-95 transition-transform">
+                <div class="text-4xl mb-2">🎮</div>
+                <h3 class="text-lg font-bold text-white">Play Game</h3>
+                <p class="text-xs text-gray-300 text-center mt-1">Match cards</p>
+            </button>
+            <button onclick="showReason()" class="glass-premium p-4 rounded-2xl flex flex-col items-center justify-center active:scale-95 transition-transform">
+                <div class="text-4xl mb-2">💌</div>
+                <h3 class="text-lg font-bold text-white">11 Reasons</h3>
+                <p class="text-xs text-gray-300 text-center mt-1">Why I love u</p>
+            </button>
+            <button onclick="playVoiceNote()" class="glass-premium p-4 rounded-2xl flex flex-col items-center justify-center active:scale-95 transition-transform relative overflow-hidden" id="voice-btn">
+                <div class="text-4xl mb-2" id="voice-icon">🎤</div>
+                <h3 class="text-lg font-bold text-white">Voice Note</h3>
+                <p class="text-xs text-gray-300 text-center mt-1">Listen to me</p>
+                <div id="voice-wave" class="absolute bottom-0 left-0 h-1 bg-green-400 w-0 transition-all duration-300"></div>
             </button>
         </div>
     </div>
 
-    <!-- Scene 7: Photo Gallery -->
+    <!-- Scene 7: Gallery -->
     <div id="scene7" class="scene bg-pink-50 px-4 py-8 justify-start overflow-y-auto" style="height: 100dvh;">
         <div class="w-full flex justify-between items-center mb-6 max-w-md mx-auto pt-4">
             <button onclick="nextScene(6)" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-full font-semibold shadow active:scale-95">⬅ Back</button>
             <h2 class="romantic-font text-2xl font-bold text-gray-800">Our Memories</h2>
         </div>
-
-        <div class="grid grid-cols-2 gap-4 max-w-md mx-auto pb-10" id="gallery-grid">
-            <!-- Photos will be injected here via JS -->
-        </div>
+        <div class="grid grid-cols-2 gap-4 max-w-md mx-auto pb-10" id="gallery-grid"></div>
     </div>
 
     <!-- Scene 8: Memory Game -->
@@ -239,59 +184,118 @@
             <button onclick="nextScene(6)" class="px-4 py-2 bg-white/10 text-white border border-white/20 rounded-full font-semibold shadow active:scale-95 transition">⬅ Back</button>
             <h2 class="romantic-font text-2xl font-bold text-rose-300">Find the Match</h2>
         </div>
-        
-        <!-- Difficulty & Moves Counter -->
-        <div class="mb-6 text-gray-300 font-mono text-sm">Moves taken: <span id="moves-count" class="text-rose-400 font-bold text-lg">0</span></div>
-        
-        <div class="memory-game max-w-sm mx-auto px-2" id="game-board">
-            <!-- Cards injected via JS -->
-        </div>
+        <div class="mb-6 text-gray-300 font-mono text-sm">Moves: <span id="moves-count" class="text-rose-400 font-bold text-lg">0</span></div>
+        <div class="memory-game max-w-sm mx-auto px-2" id="game-board"></div>
+        <button id="play-again-btn" onclick="startMemoryGame()" class="hidden mt-8 px-8 py-3 bg-gradient-to-r from-rose-500 to-pink-600 text-white font-bold rounded-full shadow-lg active:scale-95 transition-all animate-bounce">Play Again 🔄</button>
+    </div>
 
-        <!-- Play Again Button (Hidden by default) -->
-        <button id="play-again-btn" onclick="startMemoryGame()" class="hidden mt-8 px-8 py-3 bg-gradient-to-r from-rose-500 to-pink-600 text-white font-bold rounded-full shadow-lg active:scale-95 transition-all animate-bounce">
-            Play Again 🔄
-        </button>
+    <!-- Lightbox for Gallery -->
+    <div id="lightbox" class="fixed inset-0 bg-black bg-opacity-90 z-[60] hidden flex-col items-center justify-center transition-opacity duration-300">
+        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white text-3xl font-bold p-2 active:scale-90">&times;</button>
+        <img id="lightbox-img" src="" class="max-w-[90%] max-h-[70vh] rounded-lg border-2 border-white/50 shadow-2xl object-cover mb-4">
+        <p id="lightbox-cap" class="romantic-font text-2xl text-rose-300 italic"></p>
     </div>
 
     <script>
-        // Disable zooming
         document.addEventListener('dblclick', function(event) { event.preventDefault(); }, { passive: false });
 
-        // Gallery Data (TUM YAHAN APNI PHOTOS KE LINKS DAALNA)
-        const myPhotos = [
-            { src: 'https://via.placeholder.com/300x400', caption: 'Our First Date 🌹' },
-            { src: 'https://via.placeholder.com/300x400', caption: 'Your Cute Smile 😍' },
-            { src: 'https://via.placeholder.com/300x400', caption: 'That amazing trip ✈️' },
-            { src: 'https://via.placeholder.com/300x400', caption: 'Nakhre wali 🙄' },
-            { src: 'https://via.placeholder.com/300x400', caption: 'Forever Mine ❤️' },
-            { src: 'https://via.placeholder.com/300x400', caption: 'Happy Birthday! 🎉' }
+        // ==========================================
+        // 1. DATE LOCK / COUNTDOWN LOGIC (COMMENTED FOR NOW)
+        // ==========================================
+        /*
+        const targetDate = new Date("October 11, 2026 00:00:00").getTime();
+        
+        function checkDate() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance <= 0) {
+                document.getElementById('scene0').classList.remove('active-scene');
+                document.getElementById('scene1').classList.add('active-scene');
+            } else {
+                document.getElementById('scene1').classList.remove('active-scene');
+                document.getElementById('scene0').classList.add('active-scene');
+                
+                document.getElementById("c-days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+                document.getElementById("c-hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+                document.getElementById("c-mins").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+                document.getElementById("c-secs").innerText = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
+                setTimeout(checkDate, 1000);
+            }
+        }
+        checkDate();
+        */
+
+
+        // ==========================================
+        // 2. 11 REASONS GENERATOR LOGIC
+        // ==========================================
+        const reasons = [
+            "Because of your cute, innocent smile.",
+            "Because you handle my moods like a pro.",
+            "Because your nakhre make you even cuter.",
+            "Because talking to you gives me peace.",
+            "Because you are my best friend first.",
+            "Because of the way your eyes shine.",
+            "Because you make me want to be better.",
+            "Because even your anger is adorable.",
+            "Because we match each other perfectly.",
+            "Because you always understand my silence.",
+            "Because I simply can't imagine my life without you! ❤️"
         ];
+        let reasonIndex = 0;
 
-        // Modal Logic
+        function showReason() {
+            if(reasonIndex < reasons.length) {
+                showModal(`Reason #${reasonIndex + 1}`, reasons[reasonIndex], '💌');
+                reasonIndex++;
+            } else {
+                showModal("That's it!", "These were 11 reasons, but honestly, I have a million more reasons to love you. 🥰", "❤️");
+                reasonIndex = 0; // reset loop
+            }
+        }
+
+        // ==========================================
+        // 3. VOICE NOTE & BACKGROUND MUSIC LOGIC
+        // ==========================================
+        const voiceAudio = document.getElementById('voice-note');
+        const bgMusic = document.getElementById('bg-music');
+        let isPlaying = false;
+
+        function playVoiceNote() {
+            if(isPlaying) {
+                voiceAudio.pause(); voiceAudio.currentTime = 0; bgMusic.volume = 1.0;
+                document.getElementById('voice-icon').innerText = '🎤';
+                document.getElementById('voice-wave').style.width = '0%';
+                isPlaying = false;
+            } else {
+                bgMusic.volume = 0.2; voiceAudio.play();
+                document.getElementById('voice-icon').innerText = '⏸️';
+                document.getElementById('voice-wave').style.width = '100%';
+                isPlaying = true;
+                voiceAudio.onended = function() {
+                    bgMusic.volume = 1.0; document.getElementById('voice-icon').innerText = '🎤';
+                    document.getElementById('voice-wave').style.width = '0%'; isPlaying = false;
+                };
+            }
+        }
+
+        // ==========================================
+        // 4. GENERAL APP LOGIC
+        // ==========================================
         function showModal(title, message, icon = '🤨') {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-message').innerText = message;
-            document.getElementById('modal-icon').innerText = icon;
-            const modal = document.getElementById('custom-modal');
-            const modalBox = document.getElementById('modal-box');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            setTimeout(() => modalBox.classList.remove('scale-95'), 10);
+            document.getElementById('modal-title').innerText = title; document.getElementById('modal-message').innerText = message; document.getElementById('modal-icon').innerText = icon;
+            const modal = document.getElementById('custom-modal'); const modalBox = document.getElementById('modal-box');
+            modal.classList.remove('hidden'); modal.classList.add('flex'); setTimeout(() => modalBox.classList.remove('scale-95'), 10);
         }
-
         function closeModal() {
-            const modal = document.getElementById('custom-modal');
-            const modalBox = document.getElementById('modal-box');
-            modalBox.classList.add('scale-95');
-            setTimeout(() => { modal.classList.remove('flex'); modal.classList.add('hidden'); }, 300);
+            const modal = document.getElementById('custom-modal'); const modalBox = document.getElementById('modal-box');
+            modalBox.classList.add('scale-95'); setTimeout(() => { modal.classList.remove('flex'); modal.classList.add('hidden'); }, 300);
         }
 
-        // Scene Logic
         function nextScene(sceneNumber) {
             document.querySelectorAll('.scene').forEach(el => el.classList.remove('active-scene'));
-            const target = document.getElementById('scene' + sceneNumber);
-            target.classList.add('active-scene');
-
+            document.getElementById('scene' + sceneNumber).classList.add('active-scene');
             if (sceneNumber === 2) setupRunningButton();
             if (sceneNumber === 3) startHackerSequence();
             if (sceneNumber === 4) setupTouchUnlock();
@@ -304,9 +308,7 @@
             const btnNo = document.getElementById('btn-no');
             const evade = (e) => {
                 if(e) e.preventDefault();
-                const x = (Math.random() - 0.5) * 150; 
-                const y = (Math.random() - 0.5) * 100;
-                btnNo.style.transform = `translate(${x}px, ${y}px)`;
+                btnNo.style.transform = `translate(${(Math.random() - 0.5) * 150}px, ${(Math.random() - 0.5) * 100}px)`;
             };
             btnNo.addEventListener('touchstart', evade, {passive: false});
             btnNo.addEventListener('click', () => showModal("Cheating! 😡", "Itni tezz nahi ho tum, chup chap YES pe click karo! 😜"));
@@ -314,27 +316,15 @@
 
         // Scene 3: Hacker Sequence
         function startHackerSequence() {
-            const lines = [
-                "Connection established...",
-                "Target identified: 11 October Queen.",
-                "Warning: Heartbeat is racing! ❤️",
-                "Analyzing Nakhre levels: 99.9% (Critical).",
-                "Decrypting top-secret Birthday Surprise...",
-                "Surprise unlocked. Loading interface..."
-            ];
-            let termBox = document.getElementById('terminal-text');
-            termBox.innerHTML = '';
-            let delay = 0;
+            const lines = ["Connection established...", "Target identified: 11 October Queen.", "Warning: Heartbeat is racing! ❤️", "Analyzing Nakhre levels: 99.9% (Critical).", "Attempting to clear Gussa files... Failed. (Permanent memory).", "Decrypting top-secret Birthday Surprise..."];
+            let termBox = document.getElementById('terminal-text'); termBox.innerHTML = ''; let delay = 0;
             lines.forEach((line, index) => {
-                setTimeout(() => {
-                    termBox.innerHTML += `<p class="mb-3">> ${line}</p>`;
-                    if(index === lines.length - 1) setTimeout(() => nextScene(4), 2000);
-                }, delay);
+                setTimeout(() => { termBox.innerHTML += `<p class="mb-3">> ${line}</p>`; if(index === lines.length - 1) setTimeout(() => nextScene(4), 2000); }, delay);
                 delay += 1000;
             });
         }
 
-        // Scene 4: Touch to Unlock
+        // Scene 4: Touch to Unlock (Starts BG Music)
         function setupTouchUnlock() {
             const heartBtn = document.getElementById('heart-btn');
             const ring = document.getElementById('progress-ring');
@@ -343,200 +333,96 @@
             
             const startHold = (e) => {
                 if(e) e.preventDefault();
-                instruction.innerText = "Keep holding...";
-                instruction.classList.remove('text-rose-200'); instruction.classList.add('text-pink-400');
+                // Start background music on first interaction
+                bgMusic.play().catch(e => console.log("Audio play requires user interaction first."));
                 
+                instruction.innerText = "Keep holding..."; instruction.classList.replace('text-rose-200', 'text-pink-400');
                 holdInterval = setInterval(() => {
-                    progress += 3; 
-                    let offset = 440 - (440 * progress) / 100;
-                    ring.style.strokeDashoffset = offset;
+                    progress += 3; ring.style.strokeDashoffset = 440 - (440 * progress) / 100;
                     if(progress >= 100) { clearInterval(holdInterval); nextScene(5); }
                 }, 100);
             };
-
             const stopHold = () => {
                 clearInterval(holdInterval);
-                if(progress < 100) {
-                    progress = 0; ring.style.strokeDashoffset = 440;
-                    instruction.innerText = "Place your thumb on the heart to unlock...";
-                    instruction.classList.remove('text-pink-400'); instruction.classList.add('text-rose-200');
-                }
+                if(progress < 100) { progress = 0; ring.style.strokeDashoffset = 440; instruction.innerText = "Place your thumb on the heart to unlock..."; instruction.classList.replace('text-pink-400', 'text-rose-200'); }
             };
-
-            heartBtn.addEventListener('touchstart', startHold, {passive: false});
-            heartBtn.addEventListener('touchend', stopHold);
-            heartBtn.addEventListener('mousedown', startHold);
-            heartBtn.addEventListener('mouseup', stopHold);
-            heartBtn.addEventListener('mouseleave', stopHold);
+            heartBtn.addEventListener('touchstart', startHold, {passive: false}); heartBtn.addEventListener('touchend', stopHold);
+            heartBtn.addEventListener('mousedown', startHold); heartBtn.addEventListener('mouseup', stopHold); heartBtn.addEventListener('mouseleave', stopHold);
         }
 
         // Scene 5: Grand Finale Letter
         function startGrandFinale() {
             const card = document.getElementById('final-card');
             setTimeout(() => { card.classList.remove('opacity-0', 'scale-95'); card.classList.add('opacity-100', 'scale-100'); }, 100);
-
-            // Confetti
-            let end = Date.now() + (5 * 1000);
-            let colors = ['#ff0a54', '#ff477e', '#ff7096', '#fbb1bd', '#e2e8f0'];
+            
+            let end = Date.now() + (5 * 1000); let colors = ['#ff0a54', '#ff477e', '#ff7096', '#fbb1bd', '#e2e8f0'];
             (function frame() {
                 confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: colors, zIndex: 100 });
                 confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: colors, zIndex: 100 });
                 if (Date.now() < end) requestAnimationFrame(frame);
             }());
 
-            const letterText = "Happy Birthday Meri Jaan! 🎉\n\nTum janti ho tum mere liye kitni special ho. Tumhara bachpana, tumhare nakhre, aur tumhari smile... mera din bana deti hai.\n\nThank you meri life mein aane ke liye aur itna sara pyar dene ke liye. Main hamesha tumhara password decrypt karunga aur tumhare har nakhre uthaunga.\n\nEnjoy your 11th Oct! I love you, forever and always. ❤️";
-            
-            const letterContainer = document.getElementById('love-letter');
-            letterContainer.innerHTML = '';
-            let i = 0;
+            const letterText = "Happy Birthday Meri Jaan! 🎉\n\nEk aur saal guzar gaya, aur tum pehle se bhi zyada pyari aur khoobsurat ho gayi ho. Seriously, pata nahi tum itna cute kaise manage karti ho!\n\nTumhara woh bachpana, tumhare nakhre, aur tumhari wo choti-choti baaton pe gussa hona... mujhe sabse zyada pasand hai.\n\nThank you meri life mein itni saari khushiyan aur magic laane ke liye. Main promise karta hu ki main hamesha tumhara password decrypt karunga, tumhare har nakhre uthaunga, aur tumhare chehre ki is khoobsurat smile ko kabhi kam nahi hone dunga.\n\nEnjoy your 11th Oct! You are the best thing that ever happened to me. ❤️\n\nYours,\nThe guy whose heart beats only for you.";
+            const letterContainer = document.getElementById('love-letter'); letterContainer.innerHTML = ''; let i = 0;
             
             setTimeout(() => {
                 function typeWriter() {
                     if (i < letterText.length) {
-                        if(letterText.charAt(i) === '\n') letterContainer.innerHTML += "<br>";
-                        else letterContainer.innerHTML += letterText.charAt(i);
+                        letterContainer.innerHTML += letterText.charAt(i) === '\n' ? "<br>" : letterText.charAt(i);
                         document.getElementById('letter-container').scrollTop = document.getElementById('letter-container').scrollHeight;
-                        i++;
-                        setTimeout(typeWriter, 40);
+                        i++; setTimeout(typeWriter, 40);
                     } else {
                         letterContainer.classList.remove('typing-cursor');
-                        // Show Next Button
-                        document.getElementById('gift-hub-btn').classList.remove('hidden');
-                        document.getElementById('gift-hub-btn').classList.add('block');
+                        document.getElementById('gift-hub-btn').classList.remove('hidden'); document.getElementById('gift-hub-btn').classList.add('block');
                     }
                 }
                 typeWriter();
             }, 1000);
         }
 
-        // Scene 7: Gallery Builder
+        // ==========================================
+        // 5. GALLERY LOGIC
+        // ==========================================
+        const myPhotos = [
+            { src: 'https://raw.githubusercontent.com/itzaaaru1-a11y/Birthday/refs/heads/main/3e156459-6896-4d0e-b6a7-fd1e66ebafab.jpg', caption: 'Our imagination 🌹' },
+            { src: 'https://raw.githubusercontent.com/itzaaaru1-a11y/Birthday/refs/heads/main/b87cf9cc-ac7d-4d45-9edb-d2930c0c2001.jpg', caption: 'Your Cute Smile 😍' },
+            { src: 'https://raw.githubusercontent.com/itzaaaru1-a11y/Birthday/refs/heads/main/bd5b224e-b1b5-4480-9484-2364a0fddecb.jpg', caption: 'Nakhre wali ladki 🙄' },
+            { src: 'https://raw.githubusercontent.com/itzaaaru1-a11y/Birthday/refs/heads/main/4aebd464-11c0-4e77-8a3f-c436bd5e819d.jpg', caption: 'Happy 11th Oct! 🎉' }
+        ];
+
         function buildGallery() {
-            const grid = document.getElementById('gallery-grid');
-            grid.innerHTML = '';
-            myPhotos.forEach((photo, index) => {
-                grid.innerHTML += `
-                    <div class="polaroid rounded-sm cursor-pointer" onclick="openLightbox('${photo.src}', '${photo.caption}')">
-                        <img src="${photo.src}" alt="Memory" class="w-full h-32 object-cover mb-2 border border-gray-200">
-                        <p class="text-center text-gray-800 text-xs font-semibold romantic-font">${photo.caption}</p>
-                    </div>
-                `;
-            });
+            const grid = document.getElementById('gallery-grid'); grid.innerHTML = '';
+            myPhotos.forEach(photo => { grid.innerHTML += `<div class="polaroid rounded-sm cursor-pointer" onclick="openLightbox('${photo.src}', '${photo.caption}')"><img src="${photo.src}" class="w-full h-32 object-cover mb-2 border border-gray-200"><p class="text-center text-gray-800 text-xs font-semibold romantic-font">${photo.caption}</p></div>`; });
         }
+        function openLightbox(src, caption) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox-cap').innerText = caption; document.getElementById('lightbox').classList.replace('hidden', 'flex'); }
+        function closeLightbox() { document.getElementById('lightbox').classList.replace('flex', 'hidden'); }
 
-        function openLightbox(src, caption) {
-            document.getElementById('lightbox-img').src = src;
-            document.getElementById('lightbox-cap').innerText = caption;
-            document.getElementById('lightbox').classList.remove('hidden');
-            document.getElementById('lightbox').classList.add('flex');
-        }
+        // ==========================================
+        // 6. MEMORY MATCH GAME LOGIC
+        // ==========================================
+        const baseCards = ['🌹','💍','👩‍❤️‍👨','🍫', '💖', '🎁', '🧸', '💋'];
+        let cardsArray = [...baseCards, ...baseCards];
+        let hasFlippedCard = false; let lockBoard = false; let firstCard, secondCard; let matchesFound = 0; let moves = 0;
 
-        function closeLightbox() {
-            document.getElementById('lightbox').classList.remove('flex');
-            document.getElementById('lightbox').classList.add('hidden');
-        }
-
-        // Scene 8: Memory Game Logic (Upgraded & Harder)
-        const baseCards = ['🌹','💍','👩‍❤️‍👨','🍫', '💖', '🎁', '🧸', '💋']; // 8 Pairs (16 Cards)
-        let cardsArray = [...baseCards, ...baseCards]; // Duplicate to make pairs
-        let hasFlippedCard = false;
-        let lockBoard = false;
-        let firstCard, secondCard;
-        let matchesFound = 0;
-        let moves = 0;
-
-        // Fisher-Yates Shuffle Algorithm (Makes it 100% random every time)
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
+        function shuffle(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array; }
+        
         function startMemoryGame() {
-            nextScene(8);
-            const board = document.getElementById('game-board');
-            const movesDisplay = document.getElementById('moves-count');
-            const playAgainBtn = document.getElementById('play-again-btn');
-            
-            // Reset Stats
-            board.innerHTML = '';
-            matchesFound = 0;
-            moves = 0;
-            movesDisplay.innerText = moves;
-            playAgainBtn.classList.add('hidden'); 
-            
-            hasFlippedCard = false;
-            lockBoard = false;
-            firstCard = null;
-            secondCard = null;
-
-            // Truly Shuffle Cards
-            cardsArray = shuffle(cardsArray);
-
-            // Build Board dynamically
-            cardsArray.forEach((icon) => {
-                board.innerHTML += `
-                    <div class="memory-card" data-icon="${icon}" onclick="flipCard(this)">
-                        <div class="front-face">${icon}</div>
-                        <div class="back-face">❓</div>
-                    </div>
-                `;
-            });
+            nextScene(8); const board = document.getElementById('game-board'); board.innerHTML = ''; matchesFound = 0; moves = 0; document.getElementById('moves-count').innerText = moves; document.getElementById('play-again-btn').classList.add('hidden');
+            [hasFlippedCard, lockBoard, firstCard, secondCard] = [false, false, null, null]; cardsArray = shuffle(cardsArray);
+            cardsArray.forEach(icon => { board.innerHTML += `<div class="memory-card" data-icon="${icon}" onclick="flipCard(this)"><div class="front-face">${icon}</div><div class="back-face">❓</div></div>`; });
         }
-
         function flipCard(card) {
-            if (lockBoard) return;
-            if (card === firstCard) return;
-
-            card.classList.add('flip');
-
-            if (!hasFlippedCard) {
-                hasFlippedCard = true;
-                firstCard = card;
-                return;
-            }
-
-            secondCard = card;
-            moves++; 
-            document.getElementById('moves-count').innerText = moves;
-            
-            checkForMatch();
+            if (lockBoard || card === firstCard) return; card.classList.add('flip');
+            if (!hasFlippedCard) { hasFlippedCard = true; firstCard = card; return; }
+            secondCard = card; moves++; document.getElementById('moves-count').innerText = moves; checkForMatch();
         }
-
-        function checkForMatch() {
-            let isMatch = firstCard.dataset.icon === secondCard.dataset.icon;
-            isMatch ? disableCards() : unflipCards();
-        }
-
+        function checkForMatch() { firstCard.dataset.icon === secondCard.dataset.icon ? disableCards() : unflipCards(); }
         function disableCards() {
-            firstCard.onclick = null;
-            secondCard.onclick = null;
-            matchesFound += 2;
-            resetBoard();
-
-            if (matchesFound === cardsArray.length) {
-                setTimeout(() => {
-                    showModal("You Won! 🎉", `Awesome! You matched all cards in ${moves} moves. Just like we match perfectly together! 🥰`, "💖");
-                    confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, zIndex: 100 });
-                    document.getElementById('play-again-btn').classList.remove('hidden'); 
-                }, 500);
-            }
+            firstCard.onclick = null; secondCard.onclick = null; matchesFound += 2; resetBoard();
+            if (matchesFound === cardsArray.length) { setTimeout(() => { showModal("You Won! 🎉", `Awesome! You matched all cards in ${moves} moves. Just like we match perfectly together! 🥰`, "💖"); confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, zIndex: 100 }); document.getElementById('play-again-btn').classList.remove('hidden'); }, 500); }
         }
-
-        function unflipCards() {
-            lockBoard = true;
-            setTimeout(() => {
-                firstCard.classList.remove('flip');
-                secondCard.classList.remove('flip');
-                resetBoard();
-            }, 700); // Faster flip-back makes it harder to memorize
-        }
-
-        function resetBoard() {
-            [hasFlippedCard, lockBoard] = [false, false];
-            [firstCard, secondCard] = [null, null];
-        }
+        function unflipCards() { lockBoard = true; setTimeout(() => { firstCard.classList.remove('flip'); secondCard.classList.remove('flip'); resetBoard(); }, 700); }
+        function resetBoard() { [hasFlippedCard, lockBoard, firstCard, secondCard] = [false, false, null, null]; }
     </script>
 </body>
 </html>
